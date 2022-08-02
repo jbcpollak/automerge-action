@@ -125,8 +125,8 @@ The following merge options are supported:
   PR's body, use the first capturing subgroup from this regex as the commit
   message. Can be used to separate content that should go with the commit into
   the code base's history from boilerplate associated with the PR (licensing
-  notices, check lists, etc). For example, `(.*)^---` would keep everything up
-  until the first 3-dash line (horizontal rule in MarkDown) from the commit
+  notices, check lists, etc). For example, `(.*)^---` will include everything up
+  until the first 3-dash line (horizontal rule in MarkDown) in the commit
   message. The default value is empty, which disables this feature.
 
 - `MERGE_FILTER_AUTHOR`: When set, only pull requests raised by this author
