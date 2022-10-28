@@ -281,21 +281,5 @@ test("Unmergeable pull request fails action with non-zero exit code", async () =
   config.mergeRetrySleep = 1;
 
   // WHEN
-  const mockExit = jest
-    .spyOn(process, "exit")
-    .mockImplementationOnce(statusCode => {
-      throw new Error(
-        `process.exit was called with status code: ${statusCode}`
-      );
-    });
-
-  try {
-    await merge({ config, octokit }, pr, 0);
-  } catch (e) {
-    expect(e).toEqual(new Error("process.exit was called with status code: 1"));
-    expect(mockExit).toHaveBeenCalledWith(1);
-    return;
-  }
-
-  throw new Error("process.exit was not called!");
+  expect(await merge({ config, octokit }, pr, 0)).toEqual("not_ready");
 });
