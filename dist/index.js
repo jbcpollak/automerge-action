@@ -983,8 +983,8 @@ const {
   retry
 } = __nccwpck_require__(6979);
 
-const MAYBE_READY = ["clean", "has_hooks", "unknown", "unstable"];
-const NOT_READY = ["dirty", "draft"];
+//const MAYBE_READY = ["clean", "has_hooks", "unknown", "unstable"];
+//const NOT_READY = ["dirty", "draft"];
 
 const PR_PROPERTY = new RegExp("{pullRequest.([^}]+)}", "g");
 
@@ -1231,7 +1231,7 @@ function skipPullRequest(context, pullRequest, approvalCount) {
   return skip;
 }
 
-function waitUntilReady(pullRequest, context) {
+async function waitUntilReady(pullRequest, context) {
   const {
     octokit,
     config: { mergeRetries, mergeRetrySleep, mergeErrorFail }
@@ -1257,16 +1257,16 @@ function checkReady(pullRequest, context) {
 }
 
 function mergeable(pullRequest) {
-  const { mergeable_state } = pullRequest;
-  if (mergeable_state == null || MAYBE_READY.includes(mergeable_state)) {
-    logger.info("PR is probably ready: mergeable_state:", mergeable_state);
-    return "success";
-  } else if (NOT_READY.includes(mergeable_state)) {
-    logger.info("PR not ready: mergeable_state:", mergeable_state);
-    return "failure";
-  } else {
-    logger.info("Current PR status: mergeable_state:", mergeable_state);
+  const { mergeable, mergeable_state } = pullRequest;
+  if (mergeable === null) {
+    logger.info("Current PR status: mergeable:", mergeable, " mergeable_state: ", mergeable_state);
     return "retry";
+  } else if (mergeable === true) {
+    logger.info("PR is ready: mergeable:", mergeable, " mergeable_state: ", mergeable_state);
+    return "success";
+  } else {
+    logger.info("PR not ready: mergeable:", mergeable, " mergeable_state: ", mergeable_state);
+    return "failure";
   }
 }
 
@@ -23227,7 +23227,7 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"name":"automerge-action","version":"0.15.4","description":"GitHub action to automatically merge pull requests","main":"lib/api.js","author":"Pascal","license":"MIT","private":true,"bin":{"automerge-action":"./bin/automerge.js"},"scripts":{"test":"jest","it":"node it/it.js","lint":"prettier -l lib/** test/** && eslint .","compile":"ncc build bin/automerge.js --license LICENSE -o dist","prepublish":"yarn lint && yarn test && yarn compile"},"dependencies":{"@actions/core":"^1.10.0","@octokit/rest":"^19.0.5","argparse":"^2.0.1","fs-extra":"^10.1.0","object-resolve-path":"^1.1.1","tmp":"^0.2.1"},"devDependencies":{"@vercel/ncc":"^0.34.0","dotenv":"^16.0.3","eslint":"^8.25.0","eslint-plugin-jest":"^27.1.2","jest":"^29.2.0","prettier":"^2.7.1"},"prettier":{"trailingComma":"none","arrowParens":"avoid"}}');
+module.exports = JSON.parse('{"name":"automerge-action","version":"0.15.5","description":"GitHub action to automatically merge pull requests","main":"lib/api.js","author":"Pascal","license":"MIT","private":true,"bin":{"automerge-action":"./bin/automerge.js"},"scripts":{"test":"jest","it":"node it/it.js","lint":"prettier -l lib/** test/** && eslint .","compile":"ncc build bin/automerge.js --license LICENSE -o dist","prepublish":"yarn lint && yarn test && yarn compile"},"dependencies":{"@actions/core":"^1.10.0","@octokit/rest":"^19.0.5","argparse":"^2.0.1","fs-extra":"^10.1.0","object-resolve-path":"^1.1.1","tmp":"^0.2.1"},"devDependencies":{"@vercel/ncc":"^0.34.0","dotenv":"^16.0.3","eslint":"^8.25.0","eslint-plugin-jest":"^27.1.2","jest":"^29.2.0","prettier":"^2.7.1"},"prettier":{"trailingComma":"none","arrowParens":"avoid"}}');
 
 /***/ })
 
